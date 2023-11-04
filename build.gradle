@@ -9,6 +9,7 @@ buildscript {
 }
 
 plugins {
+    id 'java-library'
     id 'maven-publish'
     id 'org.jetbrains.kotlin.jvm' version '1.9.0'
 }
@@ -27,6 +28,11 @@ dependencies {
     compileOnly('io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT')
 
     tasks.withType(JavaCompile)*.options*.encoding = 'UTF-8'
+}
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    withSourcesJar()
 }
 
 jar.duplicatesStrategy DuplicatesStrategy.EXCLUDE
