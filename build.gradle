@@ -1,33 +1,14 @@
-buildscript {
-    ext.kotlin_version = '1.9.0'
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
 plugins {
-    id 'java-library'
-    id 'maven-publish'
     id 'org.jetbrains.kotlin.jvm' version '1.9.0'
 }
 
-version = "1.19.4"
-
 repositories {
     mavenCentral()
-    maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
 }
 
 dependencies {
-    apply plugin: "kotlin"
-
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
-    compileOnly('io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT')
-
-    tasks.withType(JavaCompile)*.options*.encoding = 'UTF-8'
+    compileOnly 'io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT'
 }
 
 java {
@@ -35,19 +16,17 @@ java {
     withSourcesJar()
 }
 
-jar.duplicatesStrategy DuplicatesStrategy.EXCLUDE
-jar.from configurations.runtimeClasspath.collect(project.&zipTree)
 
 compileKotlin.kotlinOptions {
     jvmTarget = '17'
-}
-
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "17"
-}
-
-compileKotlin {
-    kotlinOptions {
-        languageVersion = "1.9"
-    }
+    freeCompilerArgs = [
+            '-Xlambdas=indy',
+            '-Xno-param-assertions',
+            '-Xno-receiver-assertions',
+            '-Xno-call-assertions',
+            '-Xbackend-threads=0',
+            '-Xassertions=always-disable',
+            '-Xuse-fast-jar-file-system',
+            '-Xsam-conversions=indy'
+    ]
 }
