@@ -16,7 +16,7 @@ class MenuPage(
 ) : IPage {
 
     override val icons = mutableMapOf<Int, IIcon>()
-    override val inventory = Bukkit.createInventory(null, menu.size * 9, "§0${menu.display} $index".toComponent())
+    override val inventory = Bukkit.createInventory(null, menu.inventorySize, "§0${menu.display} $index".toComponent())
 
     override val dynamicItems: MutableList<IconUpdater> = mutableListOf()
 
@@ -32,7 +32,7 @@ class MenuPage(
         }
     }
 
-    override val emptySlots: MutableList<Int> = (0..<menu.size * 9).toMutableList()
+    override val emptySlots: MutableList<Int> = (0..<menu.inventorySize).toMutableList()
 
     override fun hasNextPage() = index < menu.pageCount - 1
 

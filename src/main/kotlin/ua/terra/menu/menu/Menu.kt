@@ -1,14 +1,14 @@
 package ua.terra.menu.menu
 
-import ua.terra.menu.PageProperty
+import org.bukkit.entity.Player
+import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.inventory.ItemStack
 import ua.terra.menu.event.MenuClickEvent
 import ua.terra.menu.icon.IIcon
-import org.bukkit.event.inventory.InventoryCloseEvent
-import ua.terra.menu.page.IPage
-import ua.terra.menu.updater.IconUpdater
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 import ua.terra.menu.on
+import ua.terra.menu.page.IPage
+import ua.terra.menu.property.PageProperty
+import ua.terra.menu.updater.IconUpdater
 
 class Menu(
     override val display: String,
@@ -25,9 +25,18 @@ class Menu(
 
     override var property: PageProperty? = null
 
+    override fun setIcon(index: Int, icon: IIcon) {
+        val targetPage = index / (inventorySize)
+        val pagedIndex = index % (inventorySize)
+
+        val page = pages.getOrPut(targetPage) { addPage { } }
+
+        page.setIcon(pagedIndex, icon)
+    }
+
     override fun setIcon(index: Int, stack: ItemStack, event: MenuClickEvent.() -> Unit, updater: IconUpdater?) {
-        val targetPage = index / (size * 9)
-        val pagedIndex = index % (size * 9)
+        val targetPage = index / (inventorySize)
+        val pagedIndex = index % (inventorySize)
 
         val page = pages.getOrPut(targetPage) { addPage { } }
 
@@ -35,8 +44,8 @@ class Menu(
     }
 
     override fun getIcon(index: Int): IIcon? {
-        val targetPage = index / (size * 9)
-        val pagedIndex = index % (size * 9)
+        val targetPage = index / (inventorySize)
+        val pagedIndex = index % (inventorySize)
 
         val page = pages[targetPage] ?: return null
 
@@ -55,10 +64,12 @@ class Menu(
 
     init {
         action()
+
         pages.values.forEach {
-            property?.setButtons(it)
+            property?.setupButtons(it)
             it.update()
         }
+
         on<InventoryCloseEvent> {
             if (inventory !in pages.map { it.value.inventory }) return@on
             if (slided) {

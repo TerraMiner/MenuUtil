@@ -8,17 +8,23 @@ import org.bukkit.Bukkit
 import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import ua.terra.menu.icon.MenuIcon
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitTask
+import ua.terra.menu.icon.MenuIcon
+import ua.terra.menu.menu.IMenu
 import ua.terra.menu.menu.Menu
+import ua.terra.menu.property.PageProperty
 
 typealias Task = BukkitTask
 
 val Plugin by lazy { JavaPlugin.getProvidingPlugin(Menu::class.java) }
 
 fun menuIcon(slot: Int, item: ItemStack, icon: MenuIcon.() -> Unit = {}) = MenuIcon(slot,item).apply(icon)
+
+fun IMenu.property(action: PageProperty.() -> Unit) = PageProperty(this,action).also {
+    property = it
+}
 
 fun every(delay: Int, period: Int, action: () -> Unit) =
     Bukkit.getScheduler().runTaskTimer(Plugin, Runnable(action), delay.toLong(), period.toLong())
