@@ -27,7 +27,13 @@ menuIcon(46, item(Material.ARROW) {
 ```kotlin
 //Creating Menu with parameters title, rows count and the player who will be the spectator.
 Menu("Menu Title", 6, player) {
-  property = PageProperty(prevPageButton, nextPageButton, item...)
+    //Setup menu properties.
+    property {
+        addBounds()
+        addBottom()
+        addTop()
+        addButtons()
+    }
   //Any action in Menu context.
 }.openMenu()
 //Menu#openMenu opens the menu to the player.
