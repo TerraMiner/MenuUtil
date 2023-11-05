@@ -46,7 +46,7 @@ Menu("Menu Title", 6, player) {
 ## Gradle dependency
 ```gradle
 dependencies {
-    implementation 'com.github.TerraMiner:MenuUtil:v1.0-SNAPSHOT'
+    implementation 'com.github.TerraMiner:MenuUtil:v1.0.1-SNAPSHOT'
 }
 ```
 ## Maven dependency
@@ -54,6 +54,6 @@ dependencies {
 <dependency>
     <groupId>com.github.TerraMiner</groupId>
     <artifactId>MenuUtil</artifactId>
-    <version>v1.0-SNAPSHOT</version>
+    <version>v1.0.1-SNAPSHOT</version>
 </dependency>
 ```
