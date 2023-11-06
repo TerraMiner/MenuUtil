@@ -49,7 +49,6 @@ class MenuIconSlider(
         } else {
             clicks.add { page, _ ->
                 slide(page)
-                println("Updated and incremented")
             }
         }
     }
