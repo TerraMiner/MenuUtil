@@ -25,16 +25,16 @@ interface IMenu {
 
     fun setIcon(index: Int, icon: IIcon)
 
-    fun setIcon(index: Int, stack: ItemStack,
-                event: MenuClickEvent.() -> Unit = { isCancelled = true },
-                updater: IconUpdater? = null)
+    fun setIcon(index: Int, stack: ItemStack,updater: IconUpdater? = null,
+                event: (IPage,MenuClickEvent) -> Unit = { _,e -> e.isCancelled = true })
 
-    fun getIcon(index: Int): IIcon?
 
     fun addIcon(icon: IIcon)
 
-    fun addIcon(stack: ItemStack, event: MenuClickEvent.() -> Unit = { isCancelled = true },
-                updater: IconUpdater? = null)
+    fun addIcon(stack: ItemStack,updater: IconUpdater? = null,
+                event: (IPage,MenuClickEvent) -> Unit = { _,e -> e.isCancelled = true })
+
+    fun getIcon(index: Int): IIcon?
 
 
     fun addPage(action: IPage.() -> Unit) = MenuPage(pageCount, this).apply {

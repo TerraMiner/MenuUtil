@@ -8,14 +8,26 @@ import ua.terra.menu.updater.IconUpdater
 
 interface IIcon {
     var slot: Int
-    val stack: ItemStack
-    val click: (MenuClickEvent) -> Unit
-    val iconUpdater: IconUpdater?
+    var stack: ItemStack
+    var clicks: MutableList<(IPage, MenuClickEvent) -> Unit>
+    val iconUpdaters: MutableList<IconUpdater>
 
     fun clone() = menuIcon(slot, stack.clone()) builder@{
-        this@builder.click(this@IIcon.click)
-        this@builder.iconUpdater = this@IIcon.iconUpdater?.let {
-            IconUpdater(this@builder, it.delay, it.period, it.backTicking, it.action)
-        }
+        clicks.addAll(this@IIcon.clicks)
+        iconUpdaters.addAll(this@IIcon.iconUpdaters.map {
+            IconUpdater(this, it.delay, it.period, it.backTicking, it.action)
+        })
+    }
+
+    fun addUpdater(icon: IIcon, delay: Int, period: Int, backTicking: Boolean = false, action: (IPage,IIcon) -> Unit) {
+        iconUpdaters.add(IconUpdater(icon, delay, period, backTicking , action))
+    }
+
+    fun addUpdater(updater: IconUpdater?) {
+        iconUpdaters.add(updater ?: return)
+    }
+
+    fun click(action: (IPage, MenuClickEvent) -> Unit) {
+        clicks.add(action)
     }
 }

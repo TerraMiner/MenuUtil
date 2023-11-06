@@ -9,6 +9,7 @@ import ua.terra.menu.menu.IMenu
 import ua.terra.menu.on
 import ua.terra.menu.toComponent
 import ua.terra.menu.updater.IconUpdater
+import java.util.concurrent.ConcurrentHashMap
 
 class MenuPage(
     override val index: Int,
@@ -18,15 +19,14 @@ class MenuPage(
     override val icons = mutableMapOf<Int, IIcon>()
     override val inventory = Bukkit.createInventory(null, menu.inventorySize, "§0${menu.display} $index".toComponent())
 
-    override val dynamicItems: MutableList<IconUpdater> = mutableListOf()
+    override val dynamicItems: MutableSet<IconUpdater> = ConcurrentHashMap.newKeySet()
 
     override val updater: Task = every(0,1) {
         if (dynamicItems.isEmpty()) return@every
         dynamicItems.forEach {
             if (!it.backTicking && menu.currentPage() !== this) return@forEach
-            println("Shaded tick")
             if (it.tick()) {
-                it.action(it.icon)
+                it.action(this,it.icon)
                 update(it.icon.slot)
             }
         }

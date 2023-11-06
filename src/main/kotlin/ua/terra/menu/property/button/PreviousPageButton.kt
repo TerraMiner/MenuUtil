@@ -15,9 +15,9 @@ class PreviousPageButton(override val property: PageProperty) : PageButton {
             it.displayName("§7Previous page".toComponent())
         }
     }) {
-        click {
+        click { _, e ->
             property.menu.flipBack()
-            it.isCancelled = true
+            e.isCancelled = true
         }
     }
 

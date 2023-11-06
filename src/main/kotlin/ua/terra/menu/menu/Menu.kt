@@ -34,13 +34,13 @@ class Menu(
         page.setIcon(pagedIndex, icon)
     }
 
-    override fun setIcon(index: Int, stack: ItemStack, event: MenuClickEvent.() -> Unit, updater: IconUpdater?) {
+    override fun setIcon(index: Int, stack: ItemStack, updater: IconUpdater?, event: (IPage,MenuClickEvent) -> Unit) {
         val targetPage = index / (inventorySize)
         val pagedIndex = index % (inventorySize)
 
         val page = pages.getOrPut(targetPage) { addPage { } }
 
-        page.setIcon(pagedIndex, stack, event, updater)
+        page.setIcon(pagedIndex, stack, updater,event)
     }
 
     override fun getIcon(index: Int): IIcon? {
@@ -52,9 +52,9 @@ class Menu(
         return page.getIcon(pagedIndex)
     }
 
-    override fun addIcon(stack: ItemStack, event: MenuClickEvent.() -> Unit, updater: IconUpdater?) {
+    override fun addIcon(stack: ItemStack, updater: IconUpdater?, event: (IPage,MenuClickEvent) -> Unit) {
         val page = pages.values.find { it.emptySlots.isNotEmpty() } ?: addPage { }
-        page.addIcon(stack, event, updater)
+        page.addIcon(stack,updater, event)
     }
 
     override fun addIcon(icon: IIcon) {

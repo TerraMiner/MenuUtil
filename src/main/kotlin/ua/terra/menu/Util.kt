@@ -11,20 +11,68 @@ import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitTask
+import ua.terra.menu.event.MenuClickEvent
+import ua.terra.menu.icon.IIcon
 import ua.terra.menu.icon.MenuIcon
+import ua.terra.menu.icon.MenuIconSlider
 import ua.terra.menu.menu.IMenu
 import ua.terra.menu.menu.Menu
+import ua.terra.menu.page.IPage
 import ua.terra.menu.property.PageProperty
 
 typealias Task = BukkitTask
 
 val Plugin by lazy { JavaPlugin.getProvidingPlugin(Menu::class.java) }
 
-fun menuIcon(slot: Int, item: ItemStack, icon: MenuIcon.() -> Unit = {}) = MenuIcon(slot,item).apply(icon)
+fun menuIcon(slot: Int, item: ItemStack, action: MenuIcon.() -> Unit = {}) = MenuIcon(slot, item).apply(action)
 
-fun IMenu.property(action: PageProperty.() -> Unit) = PageProperty(this,action).also {
+fun menuIconSlider(
+    delay: Int,
+    period: Int,
+    backTicking: Boolean,
+    autoSlide: Boolean,
+    slot: Int,
+    item: ItemStack,
+    action: IIcon.() -> Unit = {},
+    icons: MenuIconSlider.() -> List<IIcon>
+) = MenuIconSlider(slot, item, delay, period, backTicking, autoSlide = autoSlide, icons = icons).apply(action)
+
+fun menuIconSlider(
+    slot: Int,
+    item: ItemStack,
+    action: IIcon.() -> Unit = {},
+    icons: MenuIconSlider.() -> List<IIcon>
+) = MenuIconSlider(slot, item, icons).apply(action)
+
+fun menuIconSlider(
+    delay: Int,
+    period: Int,
+    backTicking: Boolean,
+    slot: Int,
+    item: ItemStack,
+    action: IIcon.() -> Unit = {},
+    icons: MenuIconSlider.() -> List<IIcon>
+) = MenuIconSlider(slot, item, delay, period, backTicking, icons).apply(action)
+
+fun IMenu.property(action: PageProperty.() -> Unit) = PageProperty(this, action).also {
     property = it
 }
+
+fun confirmIcon(original: ItemStack, confirm: ItemStack, confirmAction: (IPage,MenuClickEvent) -> Unit): IIcon {
+    return original.toMenuIcon {
+        click { _, event ->
+            event.menu.run { pages[page] }?.apply {
+                setIcon(slot, confirm.toMenuIcon {
+                    click(confirmAction)
+                })
+                update(slot)
+            }
+        }
+    }
+}
+
+fun ItemStack.toMenuIcon(slot: Int, action: MenuIcon.() -> Unit = { click { _,e -> e.isCancelled = true } }) = menuIcon(slot,this, action)
+fun ItemStack.toMenuIcon(action: MenuIcon.() -> Unit = { click { _,e -> e.isCancelled = true } }) = menuIcon(-1,this, action)
 
 fun every(delay: Int, period: Int, action: () -> Unit) =
     Bukkit.getScheduler().runTaskTimer(Plugin, Runnable(action), delay.toLong(), period.toLong())

@@ -20,7 +20,7 @@ interface IPage {
 
     val emptySlots: MutableList<Int>
 
-    val dynamicItems: MutableList<IconUpdater>
+    val dynamicItems: MutableSet<IconUpdater>
 
     val updater: Task
 
@@ -40,49 +40,71 @@ interface IPage {
             slot
         )
         event.callEvent()
-        icon.click(event)
+        icon.clicks.forEach {
+            it(this@IPage, event)
+        }
         isCancelled = event.isCancelled
     }
 
     fun update() {
         icons.forEach { (index, icon) ->
-            inventory.setItem(index,icon.stack)
+            inventory.setItem(index, icon.stack)
         }
     }
 
     fun update(index: Int) {
-        inventory.setItem(index,icons[index]?.stack)
+        inventory.setItem(index, icons[index]?.stack)
     }
 
-    fun addIcon(stack: ItemStack,
-                event: MenuClickEvent.() -> Unit = { isCancelled = true },
-                updater: IconUpdater? = null) {
-        addIcon(menuIcon(-1,stack) { click(event); iconUpdater = updater})
+    fun addIcon(
+        stack: ItemStack,
+        updater: IconUpdater? = null,
+        event: (IPage, MenuClickEvent) -> Unit = { _, e -> e.isCancelled = true }
+    ) {
+        addIcon(menuIcon(-1, stack) { click(event); addUpdater(updater) })
     }
 
     fun addIcon(icon: IIcon) {
-        val emptySlot = emptySlots.sorted().getOrElse(0) { throw ArrayIndexOutOfBoundsException("That menu page is already fully!") }
-        setIcon(emptySlot,icon.clone())
+        val emptySlot = emptySlots.sorted()
+            .getOrElse(0) { throw ArrayIndexOutOfBoundsException("That menu page is already fully!") }
+        setIcon(emptySlot, icon)
     }
 
     fun setIcon(index: Int, icon: IIcon) {
         icon.slot = index
-        icons[index] = icon.clone()
+        icons[index] = icon
 
-        icons[index]?.iconUpdater?.also { dynamicItems.add(it) }
+        icons[index]?.iconUpdaters?.forEach {
+            dynamicItems.add(it)
+        }
 
-        if (icon.stack.amount > 0) emptySlots.remove(icon.slot)
-        else if (!emptySlots.contains(icon.slot)) emptySlots.add(icon.slot)
+        if (icon.stack.amount > 0) emptySlots.remove(index)
+        else if (!emptySlots.contains(index)) emptySlots.add(index)
+    }
+
+    fun replaceIcon(index: Int, icon: IIcon) {
+        icons[index]?.iconUpdaters?.forEach {
+            dynamicItems.remove(it)
+        }
+        icons.remove(icon.slot)
+        if (!emptySlots.contains(index)) emptySlots.add(index)
+        setIcon(index, icon)
+    }
+
+    fun replaceIcon(icon: IIcon) {
+        replaceIcon(icon.slot, icon)
     }
 
     fun setIcon(icon: IIcon) {
-        setIcon(icon.slot,icon.clone())
+        setIcon(icon.slot, icon)
     }
 
-    fun setIcon(index: Int, stack: ItemStack,
-                event: MenuClickEvent.() -> Unit = { isCancelled = true },
-                updater: IconUpdater? = null) {
-        setIcon(menuIcon(index,stack) { click(event); iconUpdater = updater })
+    fun setIcon(
+        index: Int, stack: ItemStack,
+        updater: IconUpdater? = null,
+        event: (IPage, MenuClickEvent) -> Unit = { _, e -> e.isCancelled = true }
+    ) {
+        setIcon(menuIcon(index, stack) { click(event); addUpdater(updater) })
     }
 
     fun getIcon(index: Int) = icons[index]
