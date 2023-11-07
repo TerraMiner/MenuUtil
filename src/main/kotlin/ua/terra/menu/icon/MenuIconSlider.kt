@@ -5,19 +5,30 @@ import ua.terra.menu.event.MenuClickEvent
 import ua.terra.menu.page.IPage
 import ua.terra.menu.updater.IconUpdater
 
-class MenuIconSlider(
+class MenuIconSlider private constructor(
     override var slot: Int,
     override var stack: ItemStack,
     delay: Int,
     period: Int,
     backTicking: Boolean = false,
-    autoSlide: Boolean,
+    val autoSlide: Boolean,
     override var clicks: MutableList<(IPage, MenuClickEvent) -> Unit> = mutableListOf({ _, e -> e.isCancelled = true }),
-    icons: MenuIconSlider.() -> List<IIcon>,
+    val action: MenuIconSlider.() -> Unit
 ) : IIcon {
 
-    constructor(slot: Int, stack: ItemStack, icons: MenuIconSlider.() -> List<IIcon>)
-            : this(slot, stack, -1, -1, false, autoSlide = false, icons = icons)
+    constructor(
+        slot: Int,
+        stack: ItemStack,
+        action: MenuIconSlider.() -> Unit
+    ) : this(
+        slot,
+        stack,
+        -1,
+        -1,
+        false,
+        autoSlide = false,
+        action = action
+    )
 
     constructor(
         slot: Int,
@@ -25,23 +36,35 @@ class MenuIconSlider(
         delay: Int,
         period: Int,
         backTicking: Boolean,
-        icons: MenuIconSlider.() -> List<IIcon>
-    ) : this(slot, stack, delay, period, backTicking, autoSlide = true, icons = icons)
+        action: MenuIconSlider.() -> Unit
+    ) : this(
+        slot,
+        stack,
+        delay,
+        period,
+        backTicking,
+        autoSlide = true,
+        action = action
+    )
 
     override var iconUpdaters: MutableList<IconUpdater> = mutableListOf()
+    override var accessor: IconAccessor = IconAccessor(this)
 
-    var slideId = 0
-
-    private val slides = buildList {
+    private val slides = buildList<IIcon> {
         add(this@MenuIconSlider)
-        addAll(icons(this@MenuIconSlider).map { icon ->
-            icon.apply {
-                if (!autoSlide) clicks.add { page, _ -> slide(page) }
-            }
-        })
-    }
+    }.toMutableList()
+
+    private var slideId = 0
+    private var times = -1
+    private var canBackToParent = false
+
+    private var defaultTimes = times
+
+    private var skip = false
 
     init {
+        action()
+
         if (autoSlide && period > 0) {
             iconUpdaters.add(IconUpdater(this, delay, period, backTicking) { page, _ ->
                 slide(page)
@@ -53,11 +76,65 @@ class MenuIconSlider(
         }
     }
 
+    fun currentSlideId() = slideId
+
+    fun currentSlide() = slides[slideId]
+
+    fun times(count: Int, canBackToParent: Boolean = false) {
+        times = count
+        this.canBackToParent = canBackToParent
+        defaultTimes = times
+    }
+
+    fun addSlide(icon: IIcon) {
+        slides.add(
+            icon.apply {
+                if (!autoSlide) clicks.add { page, _ -> slide(page) }
+            }
+        )
+    }
+
+    fun addSlides(vararg icons: IIcon) {
+        addSlides(icons.toList())
+    }
+
+    fun addSlides(list: Collection<IIcon>) {
+        list.forEach {
+            addSlide(it)
+        }
+    }
+
     fun slide(page: IPage) {
-        if (++slideId >= slides.size) slideId = 0
-        val currentStack = slides[slideId]
-        currentStack.iconUpdaters.clear()
-        page.setIcon(slot, currentStack)
+        if (skip) {
+            skip = false
+            return
+        }
+
+        if (canBackToParent && times == 0) return
+
+        if (++slideId >= slides.size) {
+            if (times > 0) --times
+            slideId = 0
+        }
+
+        if (!canBackToParent && times == 0) return
+
+        setSlide(page)
+    }
+
+    fun reset(page: IPage) {
+        times = defaultTimes
+        slideId = 0
+        skip = true
+        setSlide(page)
+    }
+
+    private fun setSlide(page: IPage) {
+        slides[slideId].also {
+            iconUpdaters.clear()
+            page.setIcon(slot, it)
+        }
+
         page.update(slot)
     }
 

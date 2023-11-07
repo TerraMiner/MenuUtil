@@ -10,6 +10,7 @@ interface IIcon {
     var slot: Int
     var stack: ItemStack
     var clicks: MutableList<(IPage, MenuClickEvent) -> Unit>
+    var accessor: IconAccessor
     val iconUpdaters: MutableList<IconUpdater>
 
     fun clone() = menuIcon(slot, stack.clone()) builder@{
@@ -29,5 +30,13 @@ interface IIcon {
 
     fun click(action: (IPage, MenuClickEvent) -> Unit) {
         clicks.add(action)
+    }
+
+    fun visibleAccess(validate: (IPage, IIcon) -> Boolean) {
+        accessor.visibleAccess(validate)
+    }
+
+    fun clickAccess(validate: (IPage, MenuClickEvent) -> Boolean) {
+        accessor.clickAccess(validate)
     }
 }

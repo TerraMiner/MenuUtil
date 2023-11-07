@@ -27,22 +27,10 @@ val Plugin by lazy { JavaPlugin.getProvidingPlugin(Menu::class.java) }
 fun menuIcon(slot: Int, item: ItemStack, action: MenuIcon.() -> Unit = {}) = MenuIcon(slot, item).apply(action)
 
 fun menuIconSlider(
-    delay: Int,
-    period: Int,
-    backTicking: Boolean,
-    autoSlide: Boolean,
     slot: Int,
     item: ItemStack,
-    action: IIcon.() -> Unit = {},
-    icons: MenuIconSlider.() -> List<IIcon>
-) = MenuIconSlider(slot, item, delay, period, backTicking, autoSlide = autoSlide, icons = icons).apply(action)
-
-fun menuIconSlider(
-    slot: Int,
-    item: ItemStack,
-    action: IIcon.() -> Unit = {},
-    icons: MenuIconSlider.() -> List<IIcon>
-) = MenuIconSlider(slot, item, icons).apply(action)
+    action: MenuIconSlider.() -> Unit = {}
+) = MenuIconSlider(slot, item, action)
 
 fun menuIconSlider(
     delay: Int,
@@ -50,24 +38,28 @@ fun menuIconSlider(
     backTicking: Boolean,
     slot: Int,
     item: ItemStack,
-    action: IIcon.() -> Unit = {},
-    icons: MenuIconSlider.() -> List<IIcon>
-) = MenuIconSlider(slot, item, delay, period, backTicking, icons).apply(action)
+    action: MenuIconSlider.() -> Unit = {}
+) = MenuIconSlider(slot, item, delay, period, backTicking, action)
 
 fun IMenu.property(action: PageProperty.() -> Unit) = PageProperty(this, action).also {
     property = it
 }
 
-fun confirmIcon(original: ItemStack, confirm: ItemStack, confirmAction: (IPage,MenuClickEvent) -> Unit): IIcon {
-    return original.toMenuIcon {
-        click { _, event ->
-            event.menu.run { pages[page] }?.apply {
-                setIcon(slot, confirm.toMenuIcon {
-                    click(confirmAction)
-                })
-                update(slot)
+fun confirmIcon(slot: Int, original: ItemStack, confirm: ItemStack, confirmAction: (IPage,MenuClickEvent) -> Unit): IIcon {
+
+    return menuIconSlider(slot, original) {
+        times(1, false)
+        addSlide(confirm.toMenuIcon {
+            click { page, event ->
+                when {
+                    event.isRightClick -> reset(page)
+                    event.isLeftClick -> {
+                        confirmAction(page, event)
+                        reset(page)
+                    }
+                }
             }
-        }
+        })
     }
 }
 

@@ -40,6 +40,12 @@ interface IPage {
             slot
         )
         event.callEvent()
+
+        if (!icon.accessor.clickValid(this@IPage,event)){
+            isCancelled = true
+            return
+        }
+
         icon.clicks.forEach {
             it(this@IPage, event)
         }
@@ -48,12 +54,21 @@ interface IPage {
 
     fun update() {
         icons.forEach { (index, icon) ->
-            inventory.setItem(index, icon.stack)
+            if (!icon.accessor.visionValid(this, icon)) {
+                inventory.setItem(index, null)
+            } else {
+                inventory.setItem(index, icon.stack)
+            }
         }
     }
 
     fun update(index: Int) {
-        inventory.setItem(index, icons[index]?.stack)
+        val icon = icons[index]
+        if (icon?.accessor?.visionValid(this, icon) != true) {
+            inventory.setItem(index, null)
+        } else {
+            inventory.setItem(index, icon.stack)
+        }
     }
 
     fun addIcon(

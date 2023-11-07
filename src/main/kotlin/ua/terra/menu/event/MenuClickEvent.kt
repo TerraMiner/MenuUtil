@@ -41,4 +41,8 @@ class MenuClickEvent(
         @JvmStatic
         fun getHandlerList() = handlers
     }
+
+    val isRightClick get() = clickType.isRightClick
+    val isLeftClick get() = clickType.isLeftClick
+    val isShiftClick get() = clickType.isShiftClick
 }

@@ -11,5 +11,5 @@ class MenuIcon(
 ) : IIcon {
     override var clicks: MutableList<(IPage, MenuClickEvent) -> Unit> = mutableListOf({ _, e -> e.isCancelled = true })
     override var iconUpdaters: MutableList<IconUpdater> = mutableListOf()
-
+    override var accessor: IconAccessor = IconAccessor(this)
 }
