@@ -10,7 +10,7 @@ import ua.terra.menu.toComponent
 
 class PreviousPageButton(override val property: PageProperty) : PageButton {
 
-    override var icon: MenuIcon = menuIcon(property.menu.size * 9 - 8, ItemStack(Material.ARROW).apply {
+    override var icon: MenuIcon = menuIcon(property.menu.sizeY * 9 - 8, ItemStack(Material.ARROW).apply {
         editMeta {
             it.displayName("§7Previous page".toComponent())
         }
