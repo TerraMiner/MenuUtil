@@ -11,9 +11,27 @@ class IconAccessor(
 
     private var clickAccess: BiPredicate<IPage, MenuClickEvent> = BiPredicate { _,_ -> true }
 
-    fun visionValid(page: IPage, icon: IIcon) = visibleAccess.test(page,icon)
+    var lastVisionCheck = false
+    var lastClickCheck = false
 
-    fun clickValid(page: IPage, clickEvent: MenuClickEvent) = clickAccess.test(page, clickEvent)
+    var isNeedUpdate = true
+        get() = field.apply {
+            isNeedUpdate = false
+        }
+
+    fun visionValid(page: IPage, icon: IIcon) = visibleAccess.test(page,icon).also {
+        if (lastVisionCheck != it) {
+            lastVisionCheck = it
+            isNeedUpdate = true
+        }
+    }
+
+    fun clickValid(page: IPage, clickEvent: MenuClickEvent) = clickAccess.test(page, clickEvent).also {
+        if (lastClickCheck != it) {
+            lastClickCheck = it
+            isNeedUpdate = true
+        }
+    }
 
     fun visibleAccess(validate: (IPage, IIcon) -> Boolean) {
         visibleAccess = BiPredicate(validate)

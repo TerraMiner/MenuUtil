@@ -11,7 +11,7 @@ import ua.terra.menu.updater.IconUpdater
 
 interface IMenu {
     val display: String
-    val size: Int
+    val menuType: MenuType
     val action: IMenu.() -> Unit
     val pages: MutableMap<Int, IPage>
     val viewer: Player
@@ -21,7 +21,11 @@ interface IMenu {
 
     var property: PageProperty?
 
-    val inventorySize get() = size * 9
+    val sizeX get() = menuType.sizeX
+
+    val sizeY get() = menuType.sizeY
+
+    val inventorySize get() = sizeX * sizeY
 
     fun setIcon(index: Int, icon: IIcon)
 

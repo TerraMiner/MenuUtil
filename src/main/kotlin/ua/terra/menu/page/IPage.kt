@@ -53,22 +53,30 @@ interface IPage {
     }
 
     fun update() {
-        icons.forEach { (index, icon) ->
-            if (!icon.accessor.visionValid(this, icon)) {
-                inventory.setItem(index, null)
-            } else {
-                inventory.setItem(index, icon.stack)
-            }
+        icons.keys.forEach {
+            update(it)
         }
+    }
+
+    fun safetyUpdate() {
+        icons.keys.forEach {
+            safetyUpdate(it)
+        }
+    }
+    fun safetyUpdate(index: Int) {
+        val icon = icons[index]
+        val accessor = icon?.accessor
+        val check = accessor?.visionValid(this, icon) ?: false
+        if (accessor?.isNeedUpdate != true) return
+        val newStack = if (check) icon.stack else null
+        inventory.setItem(index,newStack)
     }
 
     fun update(index: Int) {
         val icon = icons[index]
-        if (icon?.accessor?.visionValid(this, icon) != true) {
-            inventory.setItem(index, null)
-        } else {
-            inventory.setItem(index, icon.stack)
-        }
+        val check = icon?.accessor?.visionValid(this, icon) ?: false
+        val newStack = if (check) icon?.stack else null
+        inventory.setItem(index,newStack)
     }
 
     fun addIcon(

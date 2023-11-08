@@ -22,7 +22,7 @@ class MenuPage(
     override val dynamicItems: MutableSet<IconUpdater> = ConcurrentHashMap.newKeySet()
 
     override val updater: Task = every(0,1) {
-        update()
+        safetyUpdate()
         if (dynamicItems.isEmpty()) return@every
         dynamicItems.forEach {
             if (!it.backTicking && menu.currentPage() !== this) return@forEach

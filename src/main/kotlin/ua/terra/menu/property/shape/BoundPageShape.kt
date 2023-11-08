@@ -17,10 +17,10 @@ class BoundPageShape(override val property: PageProperty) : PageShape {
     })
 
     override fun setup() {
-        for (i in 0..(property.menu.inventorySize) step 9) {
+        for (i in 0..<(property.menu.inventorySize) step 9) {
             if (i == 0 || i == 9 || i == 18 || i == 27 || i == 36 || i == 45) property.icons[i] = icon
         }
-        for (i in 8..(property.menu.inventorySize) step 9) {
+        for (i in 8..<(property.menu.inventorySize) step 9) {
             if (i == 8 || i == 17 || i == 26 || i == 35 || i == 44 || i == 53) property.icons[i] = icon
         }
     }
