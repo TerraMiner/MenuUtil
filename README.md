@@ -22,6 +22,7 @@ The utility is written in **Kotlin**, for **Minecraft** version **1.19.4** using
 ```
 
 ### Property examples
+___
 ```kotlin
     property {
         addBounds()
@@ -31,6 +32,7 @@ The utility is written in **Kotlin**, for **Minecraft** version **1.19.4** using
     }
 ```
 
+___
 ```kotlin
     property {
         pattern {
