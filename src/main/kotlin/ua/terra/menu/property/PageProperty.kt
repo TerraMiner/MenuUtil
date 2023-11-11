@@ -1,22 +1,23 @@
 package ua.terra.menu.property
 
 import ua.terra.menu.icon.IIcon
-import ua.terra.menu.icon.MenuIcon
+import ua.terra.menu.icon.functional.IFuncIcon
 import ua.terra.menu.menu.IMenu
 import ua.terra.menu.page.IPage
-import ua.terra.menu.property.button.NextPageButton
-import ua.terra.menu.property.button.PreviousPageButton
-import ua.terra.menu.property.shape.BottomPageShape
-import ua.terra.menu.property.shape.BoundPageShape
-import ua.terra.menu.property.shape.TopPageShape
+import ua.terra.menu.property.shape.border.BottomPageShape
+import ua.terra.menu.property.shape.border.BoundPageShape
+import ua.terra.menu.property.shape.border.TopPageShape
+import ua.terra.menu.property.shape.button.NextPageButton
+import ua.terra.menu.property.shape.button.PreviousPageButton
+import ua.terra.menu.property.shape.pattern.PatternPageShape
 
 class PageProperty(
     val menu: IMenu,
     action: PageProperty.() -> Unit
 ) {
-    private val properties = mutableListOf<PageProperties>()
+    private val properties = mutableSetOf<PageProperties>()
 
-    val icons = mutableMapOf<Int, IIcon>()
+    private val icons = mutableMapOf<Int, IIcon>()
 
     val nextButton = NextPageButton(this)
 
@@ -27,6 +28,16 @@ class PageProperty(
     val bottomShape = BottomPageShape(this)
 
     val boundShape = BoundPageShape(this)
+
+    val patternShape = PatternPageShape(this)
+
+    fun setIcon(icon: IIcon) {
+        setIcon(icon.slot,icon)
+    }
+
+    fun setIcon(index: Int, icon: IIcon) {
+        icons[index] = icon
+    }
 
 
     /**
@@ -39,7 +50,7 @@ class PageProperty(
         return this
     }
 
-    fun addBounds(menuIcon: MenuIcon): PageProperty {
+    fun addBounds(menuIcon: IFuncIcon): PageProperty {
         boundShape.icon = menuIcon
         return addBounds()
     }
@@ -54,7 +65,7 @@ class PageProperty(
         return this
     }
 
-    fun addBottom(menuIcon: MenuIcon): PageProperty {
+    fun addBottom(menuIcon: IFuncIcon): PageProperty {
         bottomShape.icon = menuIcon
         return addBottom()
     }
@@ -69,7 +80,7 @@ class PageProperty(
         return this
     }
 
-    fun addTop(menuIcon: MenuIcon): PageProperty {
+    fun addTop(menuIcon: IFuncIcon): PageProperty {
         topShape.icon = menuIcon
         return addTop()
     }
@@ -84,15 +95,25 @@ class PageProperty(
         return this
     }
 
-    fun addButtons(prevButtonIcon: MenuIcon, nextButtonIcon: MenuIcon): PageProperty {
+    fun addButtons(prevButtonIcon: IFuncIcon, nextButtonIcon: IFuncIcon): PageProperty {
         prevButton.icon = prevButtonIcon
         nextButton.icon = nextButtonIcon
         return addButtons()
     }
 
     /**
+     * Use to create complex menus
+     */
+    fun pattern(action: (PatternPageShape) -> Unit): PageProperty {
+        action(patternShape)
+        properties.add(PageProperties.PATTERN)
+        return this
+    }
+
+    /**
      * Called automatically after the menu creation context has been processed
      */
+
     fun setup(page: IPage) {
         properties.forEach {
             when (it) {
@@ -108,7 +129,14 @@ class PageProperty(
                     boundShape.setup()
                 }
 
-                else -> {}
+                PageProperties.NAVIGATION_BUTTONS -> {
+                    prevButton.setup()
+                    nextButton.setup()
+                }
+
+                PageProperties.PATTERN -> {
+                    patternShape.setup()
+                }
             }
         }
 
@@ -117,12 +145,13 @@ class PageProperty(
         }
     }
 
-    fun setupButtons(page: IPage) {
-        if (properties.contains(PageProperties.NAVIGATION_BUTTONS)) {
-            prevButton.setup(page)
-            nextButton.setup(page)
-        }
-    }
+    val top get() = menu.menuType.top
+    val bottom get() = menu.menuType.bottom
+    val left get() = menu.menuType.left
+    val right get() = menu.menuType.right
+
+    fun getIndex(x: Int, y: Int) = menu.menuType.getIndex(x,y)
+    fun getCoords(index: Int) = menu.menuType.getCoords(index)
 
     init {
         action(this)

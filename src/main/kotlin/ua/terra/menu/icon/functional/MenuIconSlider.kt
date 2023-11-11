@@ -1,9 +1,11 @@
-package ua.terra.menu.icon
+package ua.terra.menu.icon.functional
 
 import org.bukkit.inventory.ItemStack
 import ua.terra.menu.event.MenuClickEvent
+import ua.terra.menu.icon.IIcon
 import ua.terra.menu.page.IPage
 import ua.terra.menu.updater.IconUpdater
+import ua.terra.menu.utils.safeCast
 
 class MenuIconSlider private constructor(
     override var slot: Int,
@@ -14,7 +16,7 @@ class MenuIconSlider private constructor(
     val autoSlide: Boolean,
     override var clicks: MutableList<(IPage, MenuClickEvent) -> Unit> = mutableListOf({ _, e -> e.isCancelled = true }),
     val action: MenuIconSlider.() -> Unit
-) : IIcon {
+) : IFuncIcon {
 
     constructor(
         slot: Int,
@@ -89,7 +91,7 @@ class MenuIconSlider private constructor(
     fun addSlide(icon: IIcon) {
         slides.add(
             icon.apply {
-                if (!autoSlide) clicks.add { page, _ -> slide(page) }
+                if (!autoSlide) safeCast<IFuncIcon>()?.clicks?.add { page, _ -> slide(page) }
             }
         )
     }

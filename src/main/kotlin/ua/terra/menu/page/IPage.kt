@@ -3,20 +3,24 @@ package ua.terra.menu.page
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.InventoryHolder
 import org.bukkit.inventory.ItemStack
-import ua.terra.menu.Task
 import ua.terra.menu.event.MenuClickEvent
 import ua.terra.menu.icon.IIcon
+import ua.terra.menu.icon.functional.IFuncIcon
 import ua.terra.menu.menu.IMenu
-import ua.terra.menu.menuIcon
 import ua.terra.menu.updater.IconUpdater
+import ua.terra.menu.utils.Task
+import ua.terra.menu.utils.funcIcon
+import ua.terra.menu.utils.menuIcon
+import ua.terra.menu.utils.safeCast
 
-interface IPage {
+interface IPage : InventoryHolder {
     val index: Int
     val menu: IMenu
     val icons: MutableMap<Int, IIcon>
 
-    val inventory: Inventory
+    val window: Inventory
 
     val emptySlots: MutableList<Int>
 
@@ -24,10 +28,14 @@ interface IPage {
 
     val updater: Task
 
+    override fun getInventory() = window
+
     fun InventoryClickEvent.clickEvent() {
         if (whoClicked !is Player) return
-        if (this@IPage.inventory !== clickedInventory) return
-        val icon = icons[slot] ?: return
+        if (clickedInventory?.holder !is IPage) return
+        if ((clickedInventory?.holder as IPage).index != index) return
+        val icon = icons[slot]?.safeCast<IFuncIcon>() ?: return
+
         val event = MenuClickEvent(
             menu,
             icon,
@@ -41,7 +49,7 @@ interface IPage {
         )
         event.callEvent()
 
-        if (!icon.accessor.clickValid(this@IPage,event)){
+        if (!icon.accessor.clickValid(this@IPage, event)) {
             isCancelled = true
             return
         }
@@ -63,20 +71,28 @@ interface IPage {
             safetyUpdate(it)
         }
     }
+
     fun safetyUpdate(index: Int) {
-        val icon = icons[index]
-        val accessor = icon?.accessor
-        val check = accessor?.visionValid(this, icon) ?: false
-        if (accessor?.isNeedUpdate != true) return
-        val newStack = if (check) icon.stack else null
-        inventory.setItem(index,newStack)
+        icons[index]?.safeCast<IFuncIcon>()?.also {
+            val check = it.accessor.visionValid(this, it)
+
+            if (!it.accessor.isNeedUpdate) return
+
+            val newStack = if (check) it.stack else null
+
+            inventory.setItem(index, newStack)
+        }
     }
 
     fun update(index: Int) {
         val icon = icons[index]
-        val check = icon?.accessor?.visionValid(this, icon) ?: false
-        val newStack = if (check) icon?.stack else null
-        inventory.setItem(index,newStack)
+
+        val newStack = icon?.let {
+            val check = it.safeCast<IFuncIcon>()?.accessor?.visionValid(this, it) ?: true
+            if (check) it.stack else null
+        }
+
+        inventory.setItem(index, newStack)
     }
 
     fun addIcon(
@@ -84,7 +100,11 @@ interface IPage {
         updater: IconUpdater? = null,
         event: (IPage, MenuClickEvent) -> Unit = { _, e -> e.isCancelled = true }
     ) {
-        addIcon(menuIcon(-1, stack) { click(event); addUpdater(updater) })
+        addIcon(funcIcon(-1, stack) { click(event); addUpdater(updater) })
+    }
+
+    fun addIcon(stack: ItemStack) {
+        addIcon(menuIcon(-1, stack))
     }
 
     fun addIcon(icon: IIcon) {
@@ -97,7 +117,7 @@ interface IPage {
         icon.slot = index
         icons[index] = icon
 
-        icons[index]?.iconUpdaters?.forEach {
+        icon.safeCast<IFuncIcon>()?.iconUpdaters?.forEach {
             dynamicItems.add(it)
         }
 
@@ -106,7 +126,7 @@ interface IPage {
     }
 
     fun replaceIcon(index: Int, icon: IIcon) {
-        icons[index]?.iconUpdaters?.forEach {
+        icons[index]?.safeCast<IFuncIcon>()?.iconUpdaters?.forEach {
             dynamicItems.remove(it)
         }
         icons.remove(icon.slot)
@@ -126,9 +146,11 @@ interface IPage {
         index: Int, stack: ItemStack,
         updater: IconUpdater? = null,
         event: (IPage, MenuClickEvent) -> Unit = { _, e -> e.isCancelled = true }
-    ) {
-        setIcon(menuIcon(index, stack) { click(event); addUpdater(updater) })
-    }
+    ) { setIcon(funcIcon(index, stack) { click(event); addUpdater(updater) }) }
+
+    fun setIcon(
+        index: Int, stack: ItemStack,
+    ) { setIcon(menuIcon(index, stack)) }
 
     fun getIcon(index: Int) = icons[index]
 
@@ -142,6 +164,7 @@ interface IPage {
         fillItem(stack, *range.toList().toIntArray())
     }
 
-    fun hasNextPage(): Boolean
-    fun hasPrevPage(): Boolean
+    fun hasNextPage() = index < menu.pageCount - 1
+
+    fun hasPrevPage() = index > 0
 }

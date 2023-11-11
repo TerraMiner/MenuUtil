@@ -1,14 +1,13 @@
 package ua.terra.menu.page
 
-import org.bukkit.Bukkit
 import org.bukkit.event.inventory.InventoryClickEvent
-import ua.terra.menu.Task
-import ua.terra.menu.every
 import ua.terra.menu.icon.IIcon
 import ua.terra.menu.menu.IMenu
-import ua.terra.menu.on
-import ua.terra.menu.toComponent
 import ua.terra.menu.updater.IconUpdater
+import ua.terra.menu.utils.Task
+import ua.terra.menu.utils.createWindow
+import ua.terra.menu.utils.every
+import ua.terra.menu.utils.on
 import java.util.concurrent.ConcurrentHashMap
 
 class MenuPage(
@@ -17,7 +16,8 @@ class MenuPage(
 ) : IPage {
 
     override val icons = mutableMapOf<Int, IIcon>()
-    override val inventory = Bukkit.createInventory(null, menu.inventorySize, "§0${menu.display} $index".toComponent())
+
+    override val window = createWindow(this, menu.menuType, "§0${menu.display} $index")
 
     override val dynamicItems: MutableSet<IconUpdater> = ConcurrentHashMap.newKeySet()
 
@@ -34,10 +34,6 @@ class MenuPage(
     }
 
     override val emptySlots: MutableList<Int> = (0..<menu.inventorySize).toMutableList()
-
-    override fun hasNextPage() = index < menu.pageCount - 1
-
-    override fun hasPrevPage() = index > 0
 
 
     init {

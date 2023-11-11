@@ -1,13 +1,14 @@
-package ua.terra.menu.icon
+package ua.terra.menu.icon.functional
 
 import ua.terra.menu.event.MenuClickEvent
+import ua.terra.menu.icon.IIcon
 import ua.terra.menu.page.IPage
 import java.util.function.BiPredicate
 
 class IconAccessor(
-    val icon: IIcon
+    val icon: IFuncIcon
 ) {
-    private var visibleAccess: BiPredicate<IPage, IIcon> = BiPredicate { _,_ -> true }
+    private var visibleAccess: BiPredicate<IPage, IIcon> = BiPredicate { _, _ -> true }
 
     private var clickAccess: BiPredicate<IPage, MenuClickEvent> = BiPredicate { _,_ -> true }
 

@@ -13,9 +13,8 @@ enum class MenuType(
     MENU_9X4(InventoryType.CHEST, 9,4),
     MENU_9X5(InventoryType.CHEST, 9,5),
     MENU_9X6(InventoryType.CHEST, 9,6),
-    DISPENSER(InventoryType.DISPENSER, 3, 3),
-    DROPPER(InventoryType.DROPPER, 3, 3),
-    HOPPER(InventoryType.HOPPER,1,5);
+    MENU_3X3(InventoryType.DISPENSER, 3, 3),
+    MENU_5X1(InventoryType.HOPPER,5,1);
 
     fun getIndex(x: Int, y: Int): Int {
         return x.coerceIn(0,sizeX-1) + y.coerceIn(0,sizeY-1) * sizeX
@@ -24,6 +23,11 @@ enum class MenuType(
     fun getCoords(index: Int): Pair<Int, Int> {
         return (index % sizeX).coerceIn(0, sizeX - 1) to (index / sizeX).coerceIn(0, sizeY - 1)
     }
+
+    val bottom get() = sizeY - 1
+    val top get() = 0
+    val right get() = sizeX - 1
+    val left get() = 0
 
     companion object {
         fun fromAlias(sizeY: Int): MenuType {

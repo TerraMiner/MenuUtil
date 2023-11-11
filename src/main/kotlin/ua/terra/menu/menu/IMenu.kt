@@ -27,18 +27,51 @@ interface IMenu {
 
     val inventorySize get() = sizeX * sizeY
 
-    fun setIcon(index: Int, icon: IIcon)
+    fun setIcon(x: Int, y: Int, icon: IIcon) {
+        setIcon(menuType.getIndex(x,y), icon)
+    }
 
-    fun setIcon(index: Int, stack: ItemStack,updater: IconUpdater? = null,
-                event: (IPage,MenuClickEvent) -> Unit = { _,e -> e.isCancelled = true })
+    fun setIcon(x: Int, y: Int, stack: ItemStack,updater: IconUpdater? = null,
+                event: (IPage,MenuClickEvent) -> Unit = { _,e -> e.isCancelled = true }) {
+        setIcon(menuType.getIndex(x,y),stack,updater, event)
+    }
 
+    fun setIcon(index: Int, icon: IIcon) {
+        val targetPage = index / (inventorySize)
+        val pagedIndex = index % (inventorySize)
 
-    fun addIcon(icon: IIcon)
+        val page = pages.getOrPut(targetPage) { addPage { } }
 
-    fun addIcon(stack: ItemStack,updater: IconUpdater? = null,
-                event: (IPage,MenuClickEvent) -> Unit = { _,e -> e.isCancelled = true })
+        page.setIcon(pagedIndex, icon)
+    }
 
-    fun getIcon(index: Int): IIcon?
+    fun setIcon(index: Int, stack: ItemStack, updater: IconUpdater?, event: (IPage, MenuClickEvent) -> Unit) {
+        val targetPage = index / (inventorySize)
+        val pagedIndex = index % (inventorySize)
+
+        val page = pages.getOrPut(targetPage) { addPage { } }
+
+        page.setIcon(pagedIndex, stack, updater, event)
+    }
+
+    fun getIcon(index: Int): IIcon? {
+        val targetPage = index / (inventorySize)
+        val pagedIndex = index % (inventorySize)
+
+        val page = pages[targetPage] ?: return null
+
+        return page.getIcon(pagedIndex)
+    }
+
+    fun addIcon(stack: ItemStack, updater: IconUpdater?, event: (IPage, MenuClickEvent) -> Unit) {
+        val page = pages.values.find { it.emptySlots.isNotEmpty() } ?: addPage { }
+        page.addIcon(stack, updater, event)
+    }
+
+    fun addIcon(icon: IIcon) {
+        val page = pages.values.find { it.emptySlots.isNotEmpty() } ?: addPage { }
+        page.addIcon(icon)
+    }
 
 
     fun addPage(action: IPage.() -> Unit) = MenuPage(pageCount, this).apply {
