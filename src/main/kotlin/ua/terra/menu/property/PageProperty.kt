@@ -11,7 +11,7 @@ import ua.terra.menu.property.shape.button.NextPageButton
 import ua.terra.menu.property.shape.button.PreviousPageButton
 import ua.terra.menu.property.shape.pattern.PatternPageShape
 
-class PageProperty(
+class  PageProperty(
     val menu: IMenu,
     action: PageProperty.() -> Unit
 ) {
@@ -141,6 +141,7 @@ class PageProperty(
         }
 
         icons.forEach { (slot, icon) ->
+            if (slot !in 0..<page.menu.inventorySize) return@forEach
             page.setIcon(slot, icon)
         }
     }

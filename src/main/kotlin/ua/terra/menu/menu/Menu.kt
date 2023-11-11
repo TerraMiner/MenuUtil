@@ -31,8 +31,6 @@ class Menu(
     init {
         action()
 
-        addPage {  }
-
         pages.values.forEach {
             it.update()
         }

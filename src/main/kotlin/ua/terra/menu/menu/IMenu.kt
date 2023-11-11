@@ -28,12 +28,14 @@ interface IMenu {
     val inventorySize get() = sizeX * sizeY
 
     fun setIcon(x: Int, y: Int, icon: IIcon) {
-        setIcon(menuType.getIndex(x,y), icon)
+        setIcon(menuType.getIndex(x, y), icon)
     }
 
-    fun setIcon(x: Int, y: Int, stack: ItemStack,updater: IconUpdater? = null,
-                event: (IPage,MenuClickEvent) -> Unit = { _,e -> e.isCancelled = true }) {
-        setIcon(menuType.getIndex(x,y),stack,updater, event)
+    fun setIcon(
+        x: Int, y: Int, stack: ItemStack, updater: IconUpdater? = null,
+        event: (IPage, MenuClickEvent) -> Unit = { _, e -> e.isCancelled = true }
+    ) {
+        setIcon(menuType.getIndex(x, y), stack, updater, event)
     }
 
     fun setIcon(index: Int, icon: IIcon) {
@@ -75,6 +77,7 @@ interface IMenu {
 
 
     fun addPage(action: IPage.() -> Unit) = MenuPage(pageCount, this).apply {
+
         pages[pageCount++] = this
         action()
         property?.setup(this)

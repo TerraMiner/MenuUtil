@@ -1,5 +1,6 @@
 package ua.terra.menu.page
 
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
@@ -47,7 +48,7 @@ interface IPage : InventoryHolder {
             slotType,
             slot
         )
-        event.callEvent()
+        Bukkit.getPluginManager().callEvent(event)
 
         if (!icon.accessor.clickValid(this@IPage, event)) {
             isCancelled = true
