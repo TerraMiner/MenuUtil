@@ -7,7 +7,7 @@ import ua.terra.menu.icon.functional.IFuncIcon
 import ua.terra.menu.property.PageProperty
 import ua.terra.menu.utils.funcIcon
 
-class TopPageShape(override val property: PageProperty) : BorderPageShape {
+class TopPageShape(override val property: PageProperty) : IBorderPageShape {
 
     override var icon: IFuncIcon = funcIcon(-1, ItemStack(Material.IRON_BARS).apply {
         editMeta {

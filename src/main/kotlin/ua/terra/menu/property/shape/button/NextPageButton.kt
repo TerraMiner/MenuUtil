@@ -7,7 +7,7 @@ import ua.terra.menu.property.PageProperty
 import ua.terra.menu.utils.funcIcon
 import ua.terra.menu.utils.toComponent
 
-class NextPageButton(override val property: PageProperty) : PageButtonShape {
+class NextPageButton(override val property: PageProperty) : IPageButtonShape {
 
     override var icon: IFuncIcon = funcIcon(property.run { getIndex(right - 1, bottom) }, ItemStack(Material.ARROW).apply {
         editMeta {

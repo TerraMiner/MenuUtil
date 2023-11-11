@@ -2,9 +2,9 @@ package ua.terra.menu.property.shape.pattern
 
 import ua.terra.menu.icon.IIcon
 import ua.terra.menu.property.PageProperty
-import ua.terra.menu.property.shape.PageShape
+import ua.terra.menu.property.shape.IPageShape
 
-class PatternPageShape(override val property: PageProperty) : PageShape {
+class PatternPageShape(override val property: PageProperty) : IPageShape {
 
     private val aliasMap = mutableMapOf<Char, IIcon>()
 
