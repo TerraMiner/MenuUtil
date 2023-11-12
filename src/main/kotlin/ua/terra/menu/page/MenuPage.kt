@@ -1,13 +1,11 @@
 package ua.terra.menu.page
 
-import org.bukkit.event.inventory.InventoryClickEvent
 import ua.terra.menu.icon.IIcon
 import ua.terra.menu.menu.IMenu
 import ua.terra.menu.updater.IconUpdater
 import ua.terra.menu.utils.Task
 import ua.terra.menu.utils.createWindow
 import ua.terra.menu.utils.every
-import ua.terra.menu.utils.on
 import java.util.concurrent.ConcurrentHashMap
 
 class MenuPage(
@@ -34,9 +32,4 @@ class MenuPage(
     }
 
     override val emptySlots: MutableList<Int> = (0..<menu.inventorySize).toMutableList()
-
-
-    init {
-        on<InventoryClickEvent> { clickEvent() }
-    }
 }

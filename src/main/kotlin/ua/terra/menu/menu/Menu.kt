@@ -1,10 +1,9 @@
 package ua.terra.menu.menu
 
 import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryCloseEvent
 import ua.terra.menu.page.IPage
 import ua.terra.menu.property.PageProperty
-import ua.terra.menu.utils.on
+import ua.terra.menu.utils.MenuApiListener
 
 class Menu(
     override val display: String,
@@ -35,18 +34,8 @@ class Menu(
             it.update()
         }
 
-        on<InventoryCloseEvent> {
-            if (inventory.holder !in pages.map { it.value }) return@on
-
-            if (slided) {
-                slided = false
-                return@on
-            }
-
-            pages.values.forEach { page ->
-                page.updater.cancel()
-            }
-        }
+        MenuApiListener.registerLazyEvents
     }
+
 
 }
