@@ -9,7 +9,7 @@ import ua.terra.menu.page.IPage
 
 object MenuApiListener : Listener {
     val registerLazyEvents by lazy {
-        println("[MenuUtil]: Rigistered InventoryCloseEvent")
+        println("[MenuUtil]: Rigistered InventoryCloseEvent, InventoryClickEvent")
         on<InventoryCloseEvent> {
             val holder = inventory.holder.safeCast<IPage>() ?: return@on
             val menu = holder.menu
