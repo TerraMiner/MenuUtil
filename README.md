@@ -1,7 +1,8 @@
 # MenuUtil
 
 A utility for creating menus with refreshable and clickable icons, as well as for automatically dividing content between pages.  
-The utility is written in **Kotlin**, for **Minecraft** version **1.19.4** using **PaperAPI**.
+The utility is written in **Kotlin**, for **Minecraft** 1.8+.
+ Can be used with **Java**.
 ---
 ## Usage Example
 
@@ -58,7 +59,9 @@ ___
 ```kotlin
     //Creating icon, which you can put into menu.
     menuIcon(46, item(Material.ARROW) {
-                editMeta { it.displayName("§fExample".toComponent()) }
+        itemMeta = itemMeta?.apply {
+            setDisplayName("§7Example")
+        }
     }) {
         //Any action in Icon context.
     }
@@ -68,7 +71,9 @@ ___
 ```kotlin
     //Creating icon, which you can put into menu.
     funcIcon(46, item(Material.ARROW) {
-                editMeta { it.displayName("§fExample".toComponent()) }
+        itemMeta = itemMeta?.apply {
+            setDisplayName("§7Example")
+        }
     }) {
         //Adding click action.
         click {
