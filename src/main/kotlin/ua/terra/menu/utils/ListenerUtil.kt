@@ -5,11 +5,12 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import ua.terra.menu.event.MenuClickEvent
 import ua.terra.menu.page.IPage
 
 object MenuApiListener : Listener {
     val registerLazyEvents by lazy {
-        println("[MenuUtil]: Rigistered InventoryCloseEvent, InventoryClickEvent")
+        println("[MenuUtil]: Rigistered InventoryCloseEvent, InventoryClickEvent, MenuClickEvent")
         on<InventoryCloseEvent> {
             val holder = inventory.holder.safeCast<IPage>() ?: return@on
             val menu = holder.menu
@@ -27,6 +28,17 @@ object MenuApiListener : Listener {
 
         on<InventoryClickEvent> {
             inventory.holder.safeCast<IPage>()?.apply { clickEvent() }
+        }
+
+        on<MenuClickEvent> {
+            if (!icon.accessor.clickValid(page, this)) {
+                isCancelled = true
+                return@on
+            }
+
+            icon.clicks.forEach {
+                it(page, this)
+            }
         }
     }
 }

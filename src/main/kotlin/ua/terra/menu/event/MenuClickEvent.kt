@@ -7,15 +7,15 @@ import org.bukkit.event.HandlerList
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryType.SlotType
-import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
-import ua.terra.menu.icon.IIcon
+import ua.terra.menu.icon.functional.IFuncIcon
 import ua.terra.menu.menu.IMenu
+import ua.terra.menu.page.IPage
 
 class MenuClickEvent(
     val menu: IMenu,
-    val icon: IIcon,
-    val inventory: Inventory,
+    val page: IPage,
+    val icon: IFuncIcon,
     val whoClicked: Player,
     val clickType: ClickType,
     val action: InventoryAction,

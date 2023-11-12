@@ -32,32 +32,18 @@ interface IPage : InventoryHolder {
     override fun getInventory() = window
 
     fun InventoryClickEvent.clickEvent() {
-        if (whoClicked !is Player) return
-        if (clickedInventory?.holder !is IPage) return
-        if ((clickedInventory?.holder as IPage).index != index) return
+        val player = whoClicked.safeCast<Player>() ?: return
+
+        val page = clickedInventory?.holder?.safeCast<IPage>() ?: return
+
+        if (page.index != index) return
+
         val icon = icons[slot]?.safeCast<IFuncIcon>() ?: return
 
-        val event = MenuClickEvent(
-            menu,
-            icon,
-            inventory,
-            whoClicked as Player,
-            click,
-            action,
-            cursor,
-            slotType,
-            slot
-        )
+        val event = MenuClickEvent(menu, page, icon, player, click, action, cursor, slotType, slot)
+
         Bukkit.getPluginManager().callEvent(event)
 
-        if (!icon.accessor.clickValid(this@IPage, event)) {
-            isCancelled = true
-            return
-        }
-
-        icon.clicks.forEach {
-            it(this@IPage, event)
-        }
         isCancelled = event.isCancelled
     }
 
