@@ -4,14 +4,13 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import ua.terra.menu.icon.functional.IFuncIcon
 import ua.terra.menu.property.PageProperty
-import ua.terra.menu.utils.editMeta
 import ua.terra.menu.utils.funcIcon
 
 class TopPageShape(override val property: PageProperty) : IBorderPageShape {
 
     override var icon: IFuncIcon = funcIcon(-1, ItemStack(Material.LADDER).apply {
-        editMeta {
-            it.displayName = null
+        itemMeta = itemMeta?.apply {
+            setDisplayName(null)
         }
     })
 
