@@ -53,7 +53,7 @@ ___
     }
 ```
 
-![Alt text](https://i.imgur.com/USATCfI.png "a title")
+![](https://i.imgur.com/USATCfI.png)
 
 ### Creating icon
 ```kotlin
@@ -84,20 +84,27 @@ ___
         updater(0, 2) {
             //Any action which be execute every 2 ticks.
         }
+     
+        //Adding visible accessor. 
+        //Adjusts the visibility of an item relative to the condition
+        visibleAccess { page, icon ->
+            //The item will only be visible in Creative mode
+            page.menu.viewer.gameMode == GameMode.CREATIVE
+        }
+
+        //Adding click action accessor. 
+        //Adjusts the ability to click an item relative to the condition
+        clickAccess { page, icon ->
+            //Ability to click on an item only in Creative mode
+            page.menu.viewer.gameMode == GameMode.CREATIVE
+        }
     }
+
     // Or you can turn ItemStack to FuncIcon.
     item(Material.STONE) {
         
     }.toFuncIcon {
-        //Adding click action.
-        click {
-            //Any action with InventoryClickEvent context.
-        }
-
-        //Adding updater.
-        updater(0, 2) {
-            //Any action which be execute every 2 ticks.
-        }
+        //Any context.
     }
 ```
 
