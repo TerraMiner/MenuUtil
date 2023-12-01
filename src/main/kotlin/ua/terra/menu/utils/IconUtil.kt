@@ -8,6 +8,7 @@ import ua.terra.menu.icon.functional.FuncIcon
 import ua.terra.menu.icon.functional.IFuncIcon
 import ua.terra.menu.icon.functional.MenuIconSlider
 import ua.terra.menu.page.IPage
+import ua.terra.menu.updater.IconUpdater
 
 
 fun confirmIcon(
@@ -41,6 +42,9 @@ fun ItemStack.toFuncIcon(action: IFuncIcon.() -> Unit = { click { _, e -> e.isCa
 
 fun funcIcon(slot: Int, item: ItemStack, action: IFuncIcon.() -> Unit = {}) = FuncIcon(slot, item).apply(action)
 
+fun IFuncIcon.updater(delay: Int, period: Int, action: (IPage, IIcon) -> Unit) {
+    addUpdater(IconUpdater(this,delay,period,false, action))
+}
 
 fun ItemStack.toMenuIcon(slot: Int, action: IIcon.() -> Unit = { }) =
     menuIcon(slot, this, action)
