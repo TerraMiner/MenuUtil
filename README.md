@@ -9,7 +9,7 @@ The utility is written in **Kotlin**, for **Minecraft** 1.8+.
 ### Creating menu
 ```kotlin
 //Creating Menu with parameters title, rows count and the player who will be the spectator.
-    Menu("Menu Title", 6, player) {
+    Menu("Menu Title %page%", 6, player) { //%page% - replacement for display current page number
         //Setup menu properties.
         property {
         
