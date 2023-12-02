@@ -30,6 +30,8 @@ class Menu(
     init {
         action()
 
+        if (pages.isEmpty()) addPage {  }
+
         pages.values.forEach {
             it.update()
         }

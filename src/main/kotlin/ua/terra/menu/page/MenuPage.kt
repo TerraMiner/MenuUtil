@@ -15,7 +15,7 @@ class MenuPage(
 
     override val icons = mutableMapOf<Int, IIcon>()
 
-    override val window = createWindow(this, menu.menuType, "§0${menu.display} $index")
+    override val window = createWindow(this, menu.menuType, "§0${menu.display.replace("%page%","$index")}")
 
     override val dynamicItems: MutableSet<IconUpdater> = ConcurrentHashMap.newKeySet()
 

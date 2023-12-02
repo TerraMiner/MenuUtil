@@ -77,7 +77,6 @@ interface IMenu {
 
 
     fun addPage(action: IPage.() -> Unit) = MenuPage(pageCount, this).apply {
-
         pages[pageCount++] = this
         action()
         property?.setup(this)
