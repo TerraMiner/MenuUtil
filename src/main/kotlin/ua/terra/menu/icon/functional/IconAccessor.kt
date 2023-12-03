@@ -1,5 +1,7 @@
 package ua.terra.menu.icon.functional
 
+import org.bukkit.Material
+import org.bukkit.inventory.ItemStack
 import ua.terra.menu.event.MenuClickEvent
 import ua.terra.menu.icon.IIcon
 import ua.terra.menu.page.IPage
@@ -14,6 +16,8 @@ class IconAccessor(
 
     var lastVisionCheck = false
     var lastClickCheck = false
+
+    var hide: ItemStack = ItemStack(Material.AIR)
 
     var isNeedUpdate = true
         get() = field.apply {
