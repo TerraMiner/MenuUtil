@@ -11,7 +11,7 @@ interface IFuncIcon : IIcon {
     var accessor: IconAccessor
     val iconUpdaters: MutableList<IconUpdater>
 
-    override fun clone() = funcIcon(slot, stack.clone()) builder@{
+    override fun clone(): IFuncIcon = funcIcon(slot, stack.clone()) builder@{
         clicks.addAll(this@IFuncIcon.clicks)
         iconUpdaters.addAll(this@IFuncIcon.iconUpdaters.map {
             IconUpdater(this, it.delay, it.period, it.backTicking, it.action)

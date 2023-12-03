@@ -10,44 +10,13 @@ import ua.terra.menu.utils.safeCast
 class MenuIconSlider private constructor(
     override var slot: Int,
     override var stack: ItemStack,
-    delay: Int,
-    period: Int,
-    backTicking: Boolean = false,
+    var delay: Int,
+    var period: Int,
+    var backTicking: Boolean = false,
     val autoSlide: Boolean,
     override var clicks: MutableList<(IPage, MenuClickEvent) -> Unit> = mutableListOf({ _, e -> e.isCancelled = true }),
     val action: MenuIconSlider.() -> Unit
 ) : IFuncIcon {
-
-    constructor(
-        slot: Int,
-        stack: ItemStack,
-        action: MenuIconSlider.() -> Unit
-    ) : this(
-        slot,
-        stack,
-        -1,
-        -1,
-        false,
-        autoSlide = false,
-        action = action
-    )
-
-    constructor(
-        slot: Int,
-        stack: ItemStack,
-        delay: Int,
-        period: Int,
-        backTicking: Boolean,
-        action: MenuIconSlider.() -> Unit
-    ) : this(
-        slot,
-        stack,
-        delay,
-        period,
-        backTicking,
-        autoSlide = true,
-        action = action
-    )
 
     override var iconUpdaters: MutableList<IconUpdater> = mutableListOf()
     override var accessor: IconAccessor = IconAccessor(this)
@@ -63,6 +32,19 @@ class MenuIconSlider private constructor(
     private var defaultTimes = times
 
     private var skip = false
+
+    override fun clone(): IFuncIcon =
+        MenuIconSlider(slot, stack, delay, period, backTicking, autoSlide, clicks, action).also {
+            it.iconUpdaters = iconUpdaters
+            it.accessor = accessor
+            it.slides.addAll(slides)
+            it.slideId = slideId
+            it.times = times
+            it.canBackToParent = canBackToParent
+            it.defaultTimes = defaultTimes
+            it.skip = skip
+        }
+
 
     init {
         action()
@@ -140,4 +122,35 @@ class MenuIconSlider private constructor(
         page.update(slot)
     }
 
+
+    constructor(
+        slot: Int,
+        stack: ItemStack,
+        action: MenuIconSlider.() -> Unit
+    ) : this(
+        slot,
+        stack,
+        -1,
+        -1,
+        false,
+        autoSlide = false,
+        action = action
+    )
+
+    constructor(
+        slot: Int,
+        stack: ItemStack,
+        delay: Int,
+        period: Int,
+        backTicking: Boolean,
+        action: MenuIconSlider.() -> Unit
+    ) : this(
+        slot,
+        stack,
+        delay,
+        period,
+        backTicking,
+        autoSlide = true,
+        action = action
+    )
 }
