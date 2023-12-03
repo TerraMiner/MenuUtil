@@ -72,11 +72,13 @@ interface IPage : InventoryHolder {
     }
 
     fun update(index: Int) {
-        icons[index].safeCast<IFuncIcon>()?.let {
-            val check = it.accessor.visionValid(this, it)
-            val newStack = if (check) it.stack else it.accessor.hide
-            inventory.setItem(index, newStack)
+        val icon = icons[index]
+
+        val newStack = icon?.let {
+            val check = it.safeCast<IFuncIcon>()?.accessor?.visionValid(this, it) ?: true
+            if (check) it.stack else null
         }
+        inventory.setItem(index, newStack)
     }
 
     fun addIcon(

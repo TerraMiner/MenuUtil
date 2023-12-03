@@ -7,5 +7,5 @@ interface IIcon {
     var slot: Int
     var stack: ItemStack
 
-    fun clone() = menuIcon(slot, stack.clone())
+    fun clone(): IIcon = menuIcon(slot, stack.clone())
 }
