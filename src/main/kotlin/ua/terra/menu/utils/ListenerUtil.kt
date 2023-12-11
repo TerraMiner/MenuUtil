@@ -27,6 +27,14 @@ object MenuApiListener : Listener {
         }
 
         on<InventoryClickEvent> {
+
+            whoClicked.openInventory.also {
+                if ((clickedInventory !== it.bottomInventory)) return@also
+                it.topInventory.holder.safeCast<IPage>()?.apply {
+                    if (!allowedClicksInMainInventory) isCancelled = true
+                }
+            }
+
             inventory.holder.safeCast<IPage>()?.apply { clickEvent() }
         }
 

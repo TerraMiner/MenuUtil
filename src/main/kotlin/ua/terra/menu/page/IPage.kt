@@ -29,6 +29,8 @@ interface IPage : InventoryHolder {
 
     val updater: Task
 
+    var allowedClicksInMainInventory: Boolean
+
     override fun getInventory() = window
 
     fun InventoryClickEvent.clickEvent() {

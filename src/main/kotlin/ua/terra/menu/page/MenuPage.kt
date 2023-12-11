@@ -19,6 +19,8 @@ class MenuPage(
 
     override val dynamicItems: MutableSet<IconUpdater> = ConcurrentHashMap.newKeySet()
 
+    override var allowedClicksInMainInventory: Boolean = false
+
     override val updater: Task = every(0,1) {
         safetyUpdate()
         if (dynamicItems.isEmpty()) return@every

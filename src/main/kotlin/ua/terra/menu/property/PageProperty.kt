@@ -31,12 +31,18 @@ class  PageProperty(
 
     val patternShape = PatternPageShape(this)
 
+    var allowedClicksInMainInventory = false
+
     fun setIcon(icon: IIcon) {
         setIcon(icon.slot,icon)
     }
 
     fun setIcon(index: Int, icon: IIcon) {
         icons[index] = icon
+    }
+
+    fun allowClicksInMainInventory() {
+        allowedClicksInMainInventory = true
     }
 
 
@@ -140,9 +146,13 @@ class  PageProperty(
             }
         }
 
+        page.allowedClicksInMainInventory = allowedClicksInMainInventory
+
         icons.forEach { (slot, icon) ->
+            println("setting ${icon.stack.type}")
             if (slot !in 0..<page.menu.inventorySize) return@forEach
             page.setIcon(slot, icon)
+            println("setted!")
         }
     }
 
