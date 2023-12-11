@@ -149,10 +149,8 @@ class  PageProperty(
         page.allowedClicksInMainInventory = allowedClicksInMainInventory
 
         icons.forEach { (slot, icon) ->
-            println("setting ${icon.stack.type}")
             if (slot !in 0..<page.menu.inventorySize) return@forEach
             page.setIcon(slot, icon)
-            println("setted!")
         }
     }
 
