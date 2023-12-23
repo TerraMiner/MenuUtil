@@ -116,7 +116,7 @@ ___
 ## Gradle dependency
 ```gradle
 dependencies {
-    implementation 'com.github.TerraMiner:MenuUtil:v1.0.3-SNAPSHOT'
+    implementation 'com.github.TerraMiner:MenuUtil:v1.1.0-SNAPSHOT'
 }
 ```
 ## Maven dependency
