@@ -3,6 +3,7 @@ package ua.terra.menu.utils
 import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
+import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import ua.terra.menu.event.MenuClickEvent
@@ -29,7 +30,7 @@ object MenuApiListener : Listener {
         on<InventoryClickEvent> {
 
             whoClicked.openInventory.also {
-                if ((clickedInventory !== it.bottomInventory)) return@also
+                if ((clickedInventory !== it.bottomInventory && click !== ClickType.NUMBER_KEY)) return@also
                 it.topInventory.holder.safeCast<IPage>()?.apply {
                     if (!allowedClicksInMainInventory) isCancelled = true
                 }
