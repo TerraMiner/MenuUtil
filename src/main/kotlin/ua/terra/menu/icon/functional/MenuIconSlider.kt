@@ -74,7 +74,7 @@ class MenuIconSlider private constructor(
 
     fun nextSlide(): IIcon {
         val next = (slideId + 1).let {
-            if (it > slides.size) 0
+            if (it >= slides.size) 0
             else it
         }
         return slides[next]
