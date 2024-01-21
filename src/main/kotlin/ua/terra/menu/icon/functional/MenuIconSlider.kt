@@ -72,6 +72,14 @@ class MenuIconSlider private constructor(
 
     fun currentSlide() = slides[slideId]
 
+    fun nextSlide(): IIcon {
+        val next = (slideId + 1).let {
+            if (it > slides.size) 0
+            else it
+        }
+        return slides[next]
+    }
+
     fun times(count: Int, canBackToParent: Boolean = false) {
         times = count
         this.canBackToParent = canBackToParent
