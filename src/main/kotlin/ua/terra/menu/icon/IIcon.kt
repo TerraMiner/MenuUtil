@@ -8,4 +8,8 @@ interface IIcon {
     var stack: ItemStack
 
     fun clone(): IIcon = menuIcon(slot, stack.clone())
+
+    fun afterSetup() {
+
+    }
 }

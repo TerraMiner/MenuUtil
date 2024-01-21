@@ -13,12 +13,6 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
 }
 
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-    withSourcesJar()
-}
-
-
 compileKotlin.kotlinOptions {
     jvmTarget = '17'
     freeCompilerArgs = [

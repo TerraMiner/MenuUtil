@@ -45,9 +45,14 @@ class MenuIconSlider private constructor(
             it.skip = skip
         }
 
+    override fun afterSetup() {
+        slides.forEach {
+            it.slot = slot
+        }
+    }
+
 
     init {
-        action()
 
         if (autoSlide && period > 0) {
             iconUpdaters.add(IconUpdater(this, delay, period, backTicking) { page, _ ->
@@ -58,6 +63,9 @@ class MenuIconSlider private constructor(
                 slide(page)
             }
         }
+
+        action()
+
     }
 
     fun currentSlideId() = slideId
@@ -73,7 +81,9 @@ class MenuIconSlider private constructor(
     fun addSlide(icon: IIcon) {
         slides.add(
             icon.apply {
-                if (!autoSlide) safeCast<IFuncIcon>()?.clicks?.add { page, _ -> slide(page) }
+                if (!autoSlide) safeCast<IFuncIcon>()?.clicks?.add { page, _ ->
+                    slide(page)
+                }
             }
         )
     }
@@ -116,6 +126,7 @@ class MenuIconSlider private constructor(
     private fun setSlide(page: IPage) {
         slides[slideId].also {
             iconUpdaters.clear()
+
             page.setIcon(slot, it)
         }
 

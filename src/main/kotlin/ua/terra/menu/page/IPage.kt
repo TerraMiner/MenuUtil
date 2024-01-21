@@ -102,6 +102,7 @@ interface IPage : InventoryHolder {
     }
 
     fun setIcon(index: Int, icon: IIcon) {
+
         icon.slot = index
         icons[index] = icon
 
@@ -111,6 +112,8 @@ interface IPage : InventoryHolder {
 
         if (icon.stack.amount > 0) emptySlots.remove(index)
         else if (!emptySlots.contains(index)) emptySlots.add(index)
+
+        icon.afterSetup()
     }
 
     fun replaceIcon(index: Int, icon: IIcon) {

@@ -34,7 +34,7 @@ class PatternPageShape(override val property: PageProperty) : IPageShape {
             if (row.isEmpty()) return@y
             row.forEachIndexed x@{ x, key ->
                 if (x >= property.menu.sizeX) return@y
-                property.setIcon(property.getIndex(x, y),aliasMap[key]?.clone() ?: return@x)
+                property.setIcon(property.getIndex(x, y),aliasMap[key] ?: return@x)
             }
         }
     }
