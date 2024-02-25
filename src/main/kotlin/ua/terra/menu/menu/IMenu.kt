@@ -95,6 +95,12 @@ interface IMenu {
         openMenu()
     }
 
+    fun flipTo(page: IPage) {
+        this.page = pages.entries.find { it.value == page }?.key ?: 0
+        slided = true
+        openMenu()
+    }
+
     fun currentPage() = pages[page]
 
     fun openMenu() {

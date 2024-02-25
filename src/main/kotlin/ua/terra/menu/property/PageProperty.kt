@@ -1,7 +1,6 @@
 package ua.terra.menu.property
 
 import ua.terra.menu.icon.IIcon
-import ua.terra.menu.icon.functional.IFuncIcon
 import ua.terra.menu.menu.IMenu
 import ua.terra.menu.page.IPage
 import ua.terra.menu.property.shape.border.BottomPageShape
@@ -56,7 +55,7 @@ class  PageProperty(
         return this
     }
 
-    fun addBounds(menuIcon: IFuncIcon): PageProperty {
+    fun addBounds(menuIcon: IIcon): PageProperty {
         boundShape.icon = menuIcon
         return addBounds()
     }
@@ -71,7 +70,7 @@ class  PageProperty(
         return this
     }
 
-    fun addBottom(menuIcon: IFuncIcon): PageProperty {
+    fun addBottom(menuIcon: IIcon): PageProperty {
         bottomShape.icon = menuIcon
         return addBottom()
     }
@@ -86,7 +85,7 @@ class  PageProperty(
         return this
     }
 
-    fun addTop(menuIcon: IFuncIcon): PageProperty {
+    fun addTop(menuIcon: IIcon): PageProperty {
         topShape.icon = menuIcon
         return addTop()
     }
@@ -101,7 +100,7 @@ class  PageProperty(
         return this
     }
 
-    fun addButtons(prevButtonIcon: IFuncIcon, nextButtonIcon: IFuncIcon): PageProperty {
+    fun addButtons(prevButtonIcon: IIcon, nextButtonIcon: IIcon): PageProperty {
         prevButton.icon = prevButtonIcon
         nextButton.icon = nextButtonIcon
         return addButtons()

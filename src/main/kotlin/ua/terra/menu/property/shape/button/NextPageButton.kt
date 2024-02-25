@@ -2,13 +2,13 @@ package ua.terra.menu.property.shape.button
 
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
-import ua.terra.menu.icon.functional.IFuncIcon
+import ua.terra.menu.icon.IIcon
 import ua.terra.menu.property.PageProperty
 import ua.terra.menu.utils.funcIcon
 
 class NextPageButton(override val property: PageProperty) : IPageButtonShape {
 
-    override var icon: IFuncIcon = funcIcon(property.run { getIndex(right - 1, bottom) }, ItemStack(Material.ARROW).apply {
+    override var icon: IIcon = funcIcon(property.run { getIndex(right - 1, bottom) }, ItemStack(Material.ARROW).apply {
         itemMeta = itemMeta?.apply {
             setDisplayName("§7Next page")
         }

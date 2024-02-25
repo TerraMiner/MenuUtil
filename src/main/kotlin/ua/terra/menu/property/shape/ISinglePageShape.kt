@@ -1,7 +1,7 @@
 package ua.terra.menu.property.shape
 
-import ua.terra.menu.icon.functional.IFuncIcon
+import ua.terra.menu.icon.IIcon
 
 interface ISinglePageShape : IPageShape {
-    var icon: IFuncIcon
+    var icon: IIcon
 }
