@@ -20,7 +20,6 @@ class PatternPageShape(override val property: PageProperty) : IPageShape {
     }
 
     fun pattern(vararg row: String) {
-        pattern.clear()
         pattern.addAll(row)
     }
 
