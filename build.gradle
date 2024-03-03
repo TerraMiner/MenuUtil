@@ -1,6 +1,6 @@
 plugins {
     id 'java-library'
-    id 'org.jetbrains.kotlin.jvm' version '1.9.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.22'
 }
 
 repositories {
@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
 }
 
 java {
@@ -32,3 +33,4 @@ compileKotlin.kotlinOptions {
             '-Xsam-conversions=indy'
     ]
 }
+
