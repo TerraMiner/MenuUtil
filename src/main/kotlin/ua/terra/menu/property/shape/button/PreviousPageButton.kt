@@ -20,6 +20,6 @@ class PreviousPageButton(override val property: PageProperty) : IPageButtonShape
     }
 
     override fun setup() {
-        property.setIcon(icon)
+        property.setIcon(icon.clone())
     }
 }

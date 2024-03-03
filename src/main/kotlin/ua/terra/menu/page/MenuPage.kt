@@ -1,9 +1,10 @@
 package ua.terra.menu.page
 
+import org.bukkit.inventory.Inventory
 import ua.terra.menu.icon.IIcon
 import ua.terra.menu.menu.IMenu
 import ua.terra.menu.updater.IconUpdater
-import ua.terra.menu.utils.Task
+import ua.terra.menu.utils.MenuTask
 import ua.terra.menu.utils.createWindow
 import ua.terra.menu.utils.every
 import java.util.concurrent.ConcurrentHashMap
@@ -15,15 +16,19 @@ class MenuPage(
 
     override val icons = mutableMapOf<Int, IIcon>()
 
-    override val window = createWindow(this, menu.menuType, "§0${menu.display.replace("%page%","$index")}")
+    override val window: Inventory = createWindow(this, menu.menuType, "§0${menu.display.replace("%page%","$index")}")
 
     override val dynamicItems: MutableSet<IconUpdater> = ConcurrentHashMap.newKeySet()
 
     override var allowedClicksInMainInventory: Boolean = false
 
-    override val updater: Task = every(0,1) {
+    override var updater: MenuTask = every(0,1, this::updaterAction)
+
+    override val emptySlots: MutableList<Int> = (0..<menu.inventorySize).toMutableList()
+
+    fun updaterAction() {
         safetyUpdate()
-        if (dynamicItems.isEmpty()) return@every
+        if (dynamicItems.isEmpty()) return
         dynamicItems.forEach {
             if (!it.backTicking && menu.currentPage() !== this) return@forEach
             if (it.tick()) {
@@ -32,6 +37,4 @@ class MenuPage(
             }
         }
     }
-
-    override val emptySlots: MutableList<Int> = (0..<menu.inventorySize).toMutableList()
 }

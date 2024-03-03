@@ -11,7 +11,7 @@ import ua.terra.menu.icon.IIcon
 import ua.terra.menu.icon.functional.IFuncIcon
 import ua.terra.menu.menu.IMenu
 import ua.terra.menu.updater.IconUpdater
-import ua.terra.menu.utils.Task
+import ua.terra.menu.utils.MenuTask
 import ua.terra.menu.utils.funcIcon
 import ua.terra.menu.utils.menuIcon
 import ua.terra.menu.utils.safeCast
@@ -27,7 +27,7 @@ interface IPage : InventoryHolder {
 
     val dynamicItems: MutableSet<IconUpdater>
 
-    val updater: Task
+    var updater: MenuTask
 
     var allowedClicksInMainInventory: Boolean
 
@@ -107,7 +107,7 @@ interface IPage : InventoryHolder {
         icons[index] = icon
 
         icon.safeCast<IFuncIcon>()?.iconUpdaters?.forEach {
-            dynamicItems.add(it)
+            addUpdater(it)
         }
 
         if (icon.stack.amount > 0) emptySlots.remove(index)
@@ -118,7 +118,7 @@ interface IPage : InventoryHolder {
 
     fun replaceIcon(index: Int, icon: IIcon) {
         icons[index]?.safeCast<IFuncIcon>()?.iconUpdaters?.forEach {
-            dynamicItems.remove(it)
+            removeUpdater(it)
         }
         icons.remove(icon.slot)
         if (!emptySlots.contains(index)) emptySlots.add(index)
@@ -144,6 +144,16 @@ interface IPage : InventoryHolder {
     ) { setIcon(menuIcon(index, stack)) }
 
     fun getIcon(index: Int) = icons[index]
+
+    fun addUpdater(iconUpdater: IconUpdater): Boolean {
+        return dynamicItems.add(iconUpdater)
+    }
+
+
+    fun removeUpdater(iconUpdater: IconUpdater): Boolean {
+        return dynamicItems.remove(iconUpdater)
+    }
+
 
     fun fillItem(stack: ItemStack, vararg slots: Int) {
         slots.forEach {

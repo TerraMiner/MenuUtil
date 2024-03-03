@@ -10,7 +10,7 @@ import ua.terra.menu.property.shape.button.NextPageButton
 import ua.terra.menu.property.shape.button.PreviousPageButton
 import ua.terra.menu.property.shape.pattern.PatternPageShape
 
-class  PageProperty(
+class PageProperty(
     val menu: IMenu,
     action: PageProperty.() -> Unit
 ) {
