@@ -17,8 +17,8 @@ class BoundPageShape(override val property: PageProperty) : IBorderPageShape {
 
     override fun setup() {
         for (y in property.top..property.bottom) {
-            property.setIcon(property.getIndex(property.left,y), icon.clone())
-            property.setIcon(property.getIndex(property.right,y), icon.clone())
+            property.setIcon(property.getIndex(property.left,y), icon)
+            property.setIcon(property.getIndex(property.right,y), icon)
         }
     }
 

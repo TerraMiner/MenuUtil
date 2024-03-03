@@ -16,7 +16,7 @@ class TopPageShape(override val property: PageProperty) : IBorderPageShape {
 
     override fun setup() {
         for (x in property.left..property.right) {
-            property.setIcon(property.getIndex(x,property.top), icon.clone())
+            property.setIcon(property.getIndex(x,property.top), icon)
         }
     }
 }

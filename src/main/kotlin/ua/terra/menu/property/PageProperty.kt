@@ -149,7 +149,7 @@ class PageProperty(
 
         icons.forEach { (slot, icon) ->
             if (slot !in 0..<page.menu.inventorySize) return@forEach
-            page.setIcon(slot, icon)
+            page.setIcon(slot, icon.clone())
         }
     }
 
