@@ -16,7 +16,7 @@ fun confirmIcon(
     original: ItemStack,
     confirm: ItemStack,
     confirmAction: (IPage, MenuClickEvent) -> Unit
-): IIcon {
+): MenuIconSlider {
 
     return menuIconSlider(slot, original) {
         times(1, false)
