@@ -35,7 +35,3 @@ compileKotlin.kotlinOptions {
             '-Xsam-conversions=indy'
     ]
 }
-
-allOpen {
-    annotation('ua.terra.menu.utils.KotlinOpens')
-}
