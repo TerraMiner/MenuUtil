@@ -1,6 +1,5 @@
 package ua.terra.menu.page
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.inventory.Inventory
 import ua.terra.menu.icon.IIcon
 import ua.terra.menu.menu.IMenu
@@ -16,12 +15,10 @@ class MenuPage(
     override val menu: IMenu,
 ) : IPage {
 
-    private val placeHolder = Placeholder.unparsed("page", "$index")
-
     override val icons = mutableMapOf<Int, IIcon>()
 
     override val window: Inventory = createWindow(this, menu.menuType,
-        MiniSerializer.deserialize("<color:black>${MiniSerializer.serialize(menu.display)}",placeHolder)
+        MiniSerializer.deserialize("<color:black>${MiniSerializer.serialize(menu.display)}".replace("%page%","$index"))
     )
 
     override val dynamicItems: MutableSet<IconUpdater> = ConcurrentHashMap.newKeySet()
