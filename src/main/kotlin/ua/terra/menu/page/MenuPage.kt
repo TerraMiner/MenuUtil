@@ -21,7 +21,7 @@ class MenuPage(
     override val icons = mutableMapOf<Int, IIcon>()
 
     override val window: Inventory = createWindow(this, menu.menuType,
-        MiniSerializer.deserialize("§0${MiniSerializer.serialize(menu.display)}",placeHolder)
+        MiniSerializer.deserialize("<color:black>${MiniSerializer.serialize(menu.display)}",placeHolder)
     )
 
     override val dynamicItems: MutableSet<IconUpdater> = ConcurrentHashMap.newKeySet()
