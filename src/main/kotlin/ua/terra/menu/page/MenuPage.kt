@@ -1,10 +1,12 @@
 package ua.terra.menu.page
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.inventory.Inventory
 import ua.terra.menu.icon.IIcon
 import ua.terra.menu.menu.IMenu
 import ua.terra.menu.updater.IconUpdater
 import ua.terra.menu.utils.MenuTask
+import ua.terra.menu.utils.MiniSerializer
 import ua.terra.menu.utils.createWindow
 import ua.terra.menu.utils.every
 import java.util.concurrent.ConcurrentHashMap
@@ -14,9 +16,13 @@ class MenuPage(
     override val menu: IMenu,
 ) : IPage {
 
+    private val placeHolder = Placeholder.unparsed("page", "$index")
+
     override val icons = mutableMapOf<Int, IIcon>()
 
-    override val window: Inventory = createWindow(this, menu.menuType, "§0${menu.display.replace("%page%","$index")}")
+    override val window: Inventory = createWindow(this, menu.menuType,
+        MiniSerializer.deserialize("§0${MiniSerializer.serialize(menu.display)}",placeHolder)
+    )
 
     override val dynamicItems: MutableSet<IconUpdater> = ConcurrentHashMap.newKeySet()
 

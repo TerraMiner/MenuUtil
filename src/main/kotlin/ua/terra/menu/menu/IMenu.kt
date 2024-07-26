@@ -1,5 +1,6 @@
 package ua.terra.menu.menu
 
+import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import ua.terra.menu.event.MenuClickEvent
@@ -10,7 +11,7 @@ import ua.terra.menu.property.PageProperty
 import ua.terra.menu.updater.IconUpdater
 
 interface IMenu {
-    val display: String
+    val display: Component
     val menuType: MenuType
     val action: IMenu.() -> Unit
     val pages: MutableMap<Int, IPage>
