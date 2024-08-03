@@ -10,6 +10,7 @@ import ua.terra.menu.event.MenuClickEvent
 import ua.terra.menu.page.IPage
 
 object MenuApiListener : Listener {
+    var doubleClickAllowed = false
     val registerLazyEvents by lazy {
         println("[MenuUtil]: Rigistered InventoryCloseEvent, InventoryClickEvent, MenuClickEvent")
         on<InventoryCloseEvent> {
@@ -40,6 +41,11 @@ object MenuApiListener : Listener {
         }
 
         on<MenuClickEvent> {
+            if (!doubleClickAllowed && clickType === ClickType.DOUBLE_CLICK) {
+                isCancelled = true
+                return@on
+            }
+
             if (!icon.accessor.clickValid(page, this)) {
                 isCancelled = true
                 return@on
