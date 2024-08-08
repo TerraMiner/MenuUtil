@@ -17,6 +17,10 @@ The utility is written in **Kotlin**, for **Minecraft** 1.8+.
         
         //Adding icon.
         addIcon(icon)
+
+        //Set icon by index or x,y
+        setIcon(1,0,icon)
+        setIcon(10,icon)
     //Any action in Menu context.
     }.openMenu()
 //Menu#openMenu opens the menu to the player.
