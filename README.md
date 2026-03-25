@@ -120,7 +120,7 @@ ___
 ## Gradle dependency
 ```gradle
 dependencies {
-    implementation 'com.github.TerraMiner:MenuUtil:v1.2.0-SNAPSHOT'
+    implementation 'com.github.TerraMiner:MenuUtil:v1.2.5-SNAPSHOT'
 }
 ```
 ## Maven dependency
@@ -128,6 +128,6 @@ dependencies {
 <dependency>
     <groupId>com.github.TerraMiner</groupId>
     <artifactId>MenuUtil</artifactId>
-    <version>v1.2.0-SNAPSHOT</version>
+    <version>v1.2.5-SNAPSHOT</version>
 </dependency>
 ```
